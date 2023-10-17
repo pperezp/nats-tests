@@ -8,8 +8,6 @@ import io.nats.client.api.StreamConfiguration;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 // https://nats.io/blog/jetstream-java-client-04-push-subscribe/
 /*
@@ -19,7 +17,6 @@ import java.util.logging.Logger;
 public class App {
 
     private static final String SERVER_URL = "nats://localhost:4222";
-    private static final Logger logger = Logger.getLogger(App.class.getName());
 
     public static void main(String[] args) throws IOException, InterruptedException, JetStreamApiException, TimeoutException {
         String arg = args[0];
@@ -32,11 +29,11 @@ public class App {
     }
 
     private static void showError() {
-        logger.log(Level.INFO, "Los argumentos válidos son jetstream o nats");
+        System.out.println("Los argumentos válidos son jetstream o nats");
     }
 
     private static void natsFlow() throws IOException, InterruptedException {
-        logger.log(Level.INFO, "Nats Flow");
+        System.out.println("Nats Flow");
         syncSubscribeToSubject();
     }
 
@@ -51,18 +48,18 @@ public class App {
             byte[] dataBytes = message.getData();
             String replyTo = message.getReplyTo();
 
-            logger.log(Level.INFO, "[Message arrived]: {0}", new String(dataBytes));
+            System.out.println("[Message arrived]: {0}" + new String(dataBytes));
             nc.publish(replyTo, "Message from subscriber (it will be json)".getBytes());
         });
 
         dispatcher.subscribe(subject, queueName);
 
-        logger.log(Level.INFO, "Subscribe to {0} queue: {1}", new Object[] { subject, queueName });
+        System.out.println("Subscribe to " + subject + " queue: " + queueName);
 
     }
 
     private static void jetStreamFlow() throws IOException, InterruptedException, JetStreamApiException, TimeoutException {
-        logger.info("JetStream Flow");
+        System.out.println("JetStream Flow");
         checkStreamIsCreated();
         asyncSubscribeToSubject();
     }
@@ -85,7 +82,7 @@ public class App {
 
         MessageHandler handler = (Message message) -> {
             byte[] data = message.getData();
-            logger.log(Level.INFO, "Mensaje recibido: {0}", new String(data));
+            System.out.println("Mensaje recibido: " + new String(data));
         };
 
         Dispatcher dispatcher = nc.createDispatcher();
@@ -105,11 +102,11 @@ public class App {
         try {
             nc.jetStreamManagement().getStreamInfo(streamName);
 
-            logger.log(Level.INFO, "Stream {0} already exists", streamName);
+            System.out.println("Stream " + streamName + " already exists");
 
             nc.close();
         } catch (JetStreamApiException e) {
-            logger.info("stream not found");
+            System.out.println("stream not found");
             createTopicAndSubjects(nc, streamName, subjectName1, subjectName2);
         }
     }
@@ -125,7 +122,7 @@ public class App {
 
         nc.jetStreamManagement().addStream(sc);
 
-        logger.log(Level.INFO, "Stream creado: {0}", streamName);
+        System.out.println("Stream creado: " + streamName);
 
         nc.close();
     }

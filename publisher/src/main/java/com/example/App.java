@@ -4,8 +4,6 @@ import io.nats.client.*;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
 * Cosas ya hechas:
@@ -18,7 +16,6 @@ import java.util.logging.Logger;
 public class App {
 
     private static final String SERVER_URL = "nats://localhost:4222";
-    private static final Logger logger = Logger.getLogger(App.class.getName());
 
     public static void main(String[] args) throws IOException, InterruptedException, JetStreamApiException {
         String arg = args[0];
@@ -31,17 +28,17 @@ public class App {
     }
 
     private static void natsFlow() throws IOException, InterruptedException {
-        logger.log(Level.INFO, "Nats flow --> Sync Message");
+        System.out.println("Nats flow --> Sync Message");
         publishSyncMessage();
     }
 
     private static void jetStreamFlow() throws JetStreamApiException, IOException, InterruptedException {
-        logger.log(Level.INFO, "JetStream flow --> Async Message");
+        System.out.println("JetStream flow --> Async Message");
         publishAsyncMessage();
     }
 
     private static void showError() {
-        logger.log(Level.INFO, "Los argumentos válidos son jetstream o nats");
+        System.out.println("Los argumentos válidos son jetstream o nats");
     }
 
     private static void publishAsyncMessage() throws IOException, InterruptedException, JetStreamApiException {
@@ -57,7 +54,7 @@ public class App {
             jetStream.publish(subject, message.getBytes());
         }
 
-        logger.log(Level.INFO, "Mensajes publicados");
+        System.out.println("Mensajes publicados");
         nc.close();
     }
 
@@ -72,13 +69,13 @@ public class App {
         Message msg = nc.request(subject, message, Duration.ofSeconds(timeOutInSeconds));
 
         if (msg == null) {
-            logger.log(Level.INFO, "Message is null (timeout 5 seconds)");
+            System.out.println("Message is null (timeout 5 seconds)");
             nc.close();
             return;
         }
 
         byte[] data = msg.getData();
-        logger.log(Level.INFO, "Response: {0}", new String(data));
+        System.out.println("Response: " + new String(data));
 
         nc.close();
     }
