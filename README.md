@@ -17,9 +17,14 @@ mvn compile exec:java -Dexec.mainClass="com.example.App" -Dexec.args="nats"
 
 # JetStream
 
-## Docker
+## Run in Docker
 ```
-docker run -it --rm -p 4222:4222 -v /home/prez/Escritorio/nats-test/jetstream.conf:/jetstream.conf nats -js -c /jetstream.conf -DVV
+docker run -it --rm -p 4222:4222 nats -js -DVV
+```
+
+## Run in Docker (with jestream.conf file in host)
+```
+docker run -it --rm -p 4222:4222 -v ${jetstream.conf_PATH}:/jetstream.conf nats -js -c /jetstream.conf -DVV
 ```
 
 ## Subscriber
