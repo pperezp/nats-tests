@@ -12,7 +12,7 @@ mvn compile exec:java -Dexec.mainClass="com.example.App" -Dexec.args="nats"
 
 ## Publisher
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.App" -Dexec.args="nats"
+mvn compile exec:java -Dexec.mainClass="com.example.App" -Dexec.args="sync ${subject}"
 ```
 
 # JetStream
@@ -34,5 +34,5 @@ mvn compile exec:java -Dexec.mainClass="com.example.App" -Dexec.args="jetstream"
 
 ## Publisher
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.App" -Dexec.args="jetstream"
+mvn compile exec:java -Dexec.mainClass="com.example.App" -Dexec.args="async ${subject}"
 ```
